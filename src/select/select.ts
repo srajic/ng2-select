@@ -396,13 +396,31 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }
     // up
     if (!isUpMode && e.keyCode === 38) {
-      this.behavior.prev();
+      this.behavior.prev().then(index => {
+        var y = 0;
+        if (index > 0) {
+          y = index - 1;
+        }
+        if (index === 0) {
+          y = this.element.nativeElement.querySelector('div.ui-select-container > ul').children.length - 1;
+        }
+        this.element.nativeElement.querySelector('div.ui-select-container > ul').children[y].scrollIntoView();
+      });
       e.preventDefault();
       return;
     }
     // down
     if (!isUpMode && e.keyCode === 40) {
-      this.behavior.next();
+      this.behavior.next().then(index => {
+        var y = 0;
+        if (index >= 0 && index < this.element.nativeElement.querySelector('div.ui-select-container > ul').children.length) {
+          y = index + 1;
+        }
+        if (index === this.element.nativeElement.querySelector('div.ui-select-container > ul').children.length - 1) {
+          y = 0;
+        }
+        this.element.nativeElement.querySelector('div.ui-select-container > ul').children[y].scrollIntoView();
+      })
       e.preventDefault();
       return;
     }
@@ -655,17 +673,23 @@ export class GenericBehavior extends Behavior implements OptionsBehavior {
   }
 
   public prev():void {
+    return new Promise((resolve,reject)=>{
     let index = this.actor.options.indexOf(this.actor.activeOption);
     this.actor.activeOption = this.actor
       .options[index - 1 < 0 ? this.actor.options.length - 1 : index - 1];
     super.ensureHighlightVisible();
+    resolve(index)
+    })
   }
 
   public next():void {
+    return new Promise((resolve,reject)=>{
     let index = this.actor.options.indexOf(this.actor.activeOption);
     this.actor.activeOption = this.actor
       .options[index + 1 > this.actor.options.length - 1 ? 0 : index + 1];
     super.ensureHighlightVisible();
+    resolve(index)
+    })
   }
 
   public filter(query:RegExp):void {
