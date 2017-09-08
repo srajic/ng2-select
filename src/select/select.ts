@@ -672,7 +672,7 @@ export class GenericBehavior extends Behavior implements OptionsBehavior {
     super.ensureHighlightVisible();
   }
 
-  public prev():void {
+  public prev() {
     return new Promise((resolve,reject)=>{
     let index = this.actor.options.indexOf(this.actor.activeOption);
     this.actor.activeOption = this.actor
@@ -682,7 +682,7 @@ export class GenericBehavior extends Behavior implements OptionsBehavior {
     })
   }
 
-  public next():void {
+  public next() {
     return new Promise((resolve,reject)=>{
     let index = this.actor.options.indexOf(this.actor.activeOption);
     this.actor.activeOption = this.actor
